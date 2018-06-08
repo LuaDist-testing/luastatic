@@ -1,17 +1,17 @@
 -- This file was automatically generated for the LuaDist project.
 
 package = "luastatic"
-version = "0.0.7-1"
+version = "0.0.8-1"
 -- LuaDist source
 source = {
-  tag = "0.0.7-1",
+  tag = "0.0.8-1",
   url = "git://github.com/LuaDist-testing/luastatic.git"
 }
 -- Original source
 -- source =
 -- {
 --   url = "git://github.com/ers35/luastatic.git",
---   tag = "0.0.7",
+--   tag = "0.0.8",
 -- }
 description =
 {

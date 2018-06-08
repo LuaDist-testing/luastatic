@@ -10,6 +10,7 @@ local dep_library_files = {}
 local otherflags = {}
 
 local CC = os.getenv("CC") or "cc"
+local NM = os.getenv("NM") or "nm"
 
 local function file_exists(name)
   local f = io.open(name, "r")
@@ -33,7 +34,7 @@ end
 local function shared_library_exists(lib)
   local cmd = ([[
 echo "int main(int argc, char *argv[]) { return 0; }" |\
-%s -l%s -o /dev/null -xc - 1>/dev/null 2> /dev/null
+%s -l%s -o /dev/null -xc - 1>/dev/null 2>/dev/null
 ]]):format(CC, lib)
   local str, errnum = shellout(cmd)
   return errnum == 0
@@ -71,15 +72,15 @@ for i, name in ipairs(arg) do
       extension == "so" or 
       extension == "dylib" 
     then
-      -- the library either a Lua module or a library dependency
-      local nmout = shellout("nm " .. info.path)
+      -- the library is either a Lua module or a library dependency
+      local nmout = shellout(NM .. " " .. info.path)
       if not nmout then
         print("nm not found")
         os.exit(1)
       end
       local is_module = false
       if not nmout:find("T _?luaL_newstate") then
-        for luaopen in nmout:gmatch("luaopen_([%a%p%d]+)") do
+        for luaopen in nmout:gmatch("[^dD] _?luaopen_([%a%p%d]+)") do
           local modinfo = {}
           modinfo.path = info.path
           modinfo.dotpath_underscore = luaopen
@@ -104,9 +105,16 @@ end
 local otherflags_str = table.concat(otherflags, " ")
 
 if #lua_source_files == 0 then
-  local version = "0.0.4"
+  local version = "0.0.5"
   print("luastatic " .. version)
-  print("usage: luastatic main.lua /path/to/liblua.a -I/directory/containing/lua.h/")
+  print([[
+usage: luastatic main.lua[1] require.lua[2] liblua.a[3] module.a[4] -I/include/lua[5] [6]
+  [1]: The entry point to the Lua program
+  [2]: One or more required Lua source files
+  [3]: The path to the Lua interpreter static library
+  [4]: One or more static libraries for a required Lua binary module
+  [5]: The path to the directory containing lua.h
+  [6]: Additional arguments are passed to the C compiler]])
   os.exit()
 end
 mainlua = lua_source_files[1]

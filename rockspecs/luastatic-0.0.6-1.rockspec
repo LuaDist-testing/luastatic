@@ -1,18 +1,10 @@
--- This file was automatically generated for the LuaDist project.
-
 package = "luastatic"
-version = "0.0.5-1"
--- LuaDist source
-source = {
-  tag = "0.0.5-1",
-  url = "git://github.com/LuaDist-testing/luastatic.git"
+version = "0.0.6-1"
+source =
+{
+  url = "git://github.com/ers35/luastatic.git",
+  tag = "0.0.6",
 }
--- Original source
--- source =
--- {
---   url = "git://github.com/ers35/luastatic.git",
---   tag = "0.0.5",
--- }
 description =
 {
   summary = "Build a standalone executable from a Lua program.",
